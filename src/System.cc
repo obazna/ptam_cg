@@ -69,7 +69,7 @@ void System::Run()
  * @param imBW   gray image
  * @param imRGB  color image
  */
-void System::UpdateFrame(Image<byte> imBW, Image<Rgb<byte> > imRGB)
+void System::UpdateFrame(Image<CVD::byte> imBW, Image<Rgb<CVD::byte> > imRGB)
 {
     static bool bFirstFrame = true;
     if(bFirstFrame)

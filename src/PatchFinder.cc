@@ -137,7 +137,7 @@ void PatchFinder::MakeTemplateCoarseCont(MapPoint &p)
 void PatchFinder::MakeTemplateCoarseNoWarp(KeyFrame &k, int nLevel, ImageRef irLevelPos)
 {
     mnSearchLevel = nLevel;
-    Image<byte> &im = k.aLevels[nLevel].im;
+    Image<CVD::byte> &im = k.aLevels[nLevel].im;
     if(!im.in_image_with_border(irLevelPos, mnPatchSize / 2 + 1)) {
         mbTemplateBad = true;
         return;
@@ -275,7 +275,7 @@ bool PatchFinder::IterateSubPixToConvergence(KeyFrame &kf, int nMaxIts)
 double PatchFinder::IterateSubPix(KeyFrame &kf)
 {
     Vector<2> v2Center = Level::LevelNPos(mv2SubPixPos, mnSearchLevel);
-    BasicImage<byte> &im = kf.aLevels[mnSearchLevel].im;
+    BasicImage<CVD::byte> &im = kf.aLevels[mnSearchLevel].im;
     if(!im.in_image_with_border(ir_rounded(v2Center), mnPatchSize / 2 + 1))
         return -1.0;
 
@@ -294,7 +294,7 @@ double PatchFinder::IterateSubPix(KeyFrame &kf)
     unsigned long nRowOffset = &kf.aLevels[mnSearchLevel].im[ImageRef(0,1)] - &kf.aLevels[mnSearchLevel].im[ImageRef(0,0)];
     for(ir.y = 1; ir.y < mnPatchSize - 1; ir.y++)
     {
-        byte* pTopLeftPixel = &im[::ir(v2Base) + ImageRef(1,ir.y)]; // n.b. the x=1 offset, as with y
+        CVD::byte* pTopLeftPixel = &im[::ir(v2Base) + ImageRef(1,ir.y)]; // n.b. the x=1 offset, as with y
         for(ir.x = 1; ir.x < mnPatchSize - 1; ir.x++)
         {
             float fPixel =   // Calc target interpolated pixel

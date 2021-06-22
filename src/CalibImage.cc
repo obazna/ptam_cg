@@ -27,11 +27,11 @@ using namespace GVars3;
  * @param nGate
  * @return
  */
-inline bool IsCorner(Image<byte> &im, ImageRef ir, int nGate)
+inline bool IsCorner(Image<CVD::byte> &im, ImageRef ir, int nGate)
 {
     // Find the mean intensity of the pixel ring...
     int nSum = 0;
-    static byte abPixels[16];
+    static CVD::byte abPixels[16];
     for(int i=0; i<16; i++)
     {
         abPixels[i] = im[ir + fast_pixel_ring[i]];
@@ -51,7 +51,7 @@ inline bool IsCorner(Image<byte> &im, ImageRef ir, int nGate)
     int nSwaps = 0;
     for(int i=0; i<16; i++)
     {
-        byte bValNow = abPixels[i];
+        CVD::byte bValNow = abPixels[i];
         if(bState)
         {
             if(bValNow < nLoThresh)
@@ -80,9 +80,9 @@ inline bool IsCorner(Image<byte> &im, ImageRef ir, int nGate)
  * @param irCenter
  * @return
  */
-Vector<2> GuessInitialAngles(Image<byte> &im, ImageRef irCenter)
+Vector<2> GuessInitialAngles(Image<CVD::byte> &im, ImageRef irCenter)
 {
-    image_interpolate<Interpolate::Bilinear, byte> imInterp(im);
+    image_interpolate<Interpolate::Bilinear, CVD::byte> imInterp(im);
     double dBestAngle   = 0;
     double dBestGradMag = 0;
     double dGradAtBest  = 0;
@@ -120,21 +120,21 @@ Vector<2> GuessInitialAngles(Image<byte> &im, ImageRef irCenter)
     return v2Ret;
 }
 
-bool CalibImage::MakeFromImage(Image<byte> &im)
+bool CalibImage::MakeFromImage(Image<CVD::byte> &im)
 {
     static gvar3<int> gvnCornerPatchSize("CameraCalibrator.CornerPatchPixelSize", 20, SILENT);
     mvCorners.clear();
     mvGridCorners.clear();
 
     mim = im;
-    mim.make_unique();
+//    mim.make_unique();
 
     // Find potential corners..
     // This works better on a blurred image, so make a blurred copy
     // and run the corner finding on that.
     {
-        Image<byte> imBlurred = mim;
-        imBlurred.make_unique();
+        Image<CVD::byte> imBlurred = mim;
+//        imBlurred.make_unique();
         convolveGaussian(imBlurred, GV2.GetDouble("CameraCalibrator.BlurSigma", 1.0, SILENT));
         ImageRef irTopLeft(5,5);
         ImageRef irBotRight = mim.size() - irTopLeft;

@@ -15,7 +15,7 @@ using namespace GVars3;
  *        Generates pyramid levels, does FAST detection, etc.
  * @param im gray scale image
  */
-void KeyFrame::MakeKeyFrame_Lite(BasicImage<byte> &im)
+void KeyFrame::MakeKeyFrame_Lite(BasicImage<CVD::byte> &im)
 {
     aLevels[0].im.resize(im.size());
     copy(im, aLevels[0].im);

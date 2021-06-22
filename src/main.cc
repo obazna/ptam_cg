@@ -27,11 +27,11 @@ int main()
         System s;
         s.Run();
     }
-    catch(CVD::Exceptions::All e)
+    catch (CVD::Exceptions::All &e)
     {
         cout << endl;
         cout << "!! Failed to run system; got exception. " << endl;
         cout << "   Exception was: " << endl;
-        cout << e.what << endl;
+        cout << e.what() << endl;
     }
 }

@@ -24,6 +24,7 @@ set( SRC_LIST_PTAM
         ${PROJECT_SOURCE_DIR}/src/KeyFrame.cc
         ${PROJECT_SOURCE_DIR}/src/Map.cc
         ${PROJECT_SOURCE_DIR}/src/HomographyInit.cc
+        ${PROJECT_SOURCE_DIR}/src/cvd_thread.cpp
         ${PROJECT_SOURCE_DIR}/src/MapMaker.cc
         ${PROJECT_SOURCE_DIR}/src/Bundle.cc
         ${PROJECT_SOURCE_DIR}/src/PatchFinder.cc
@@ -37,7 +38,7 @@ set( SRC_LIST_PTAM
         ${PROJECT_SOURCE_DIR}/src/ImageProcess.cc )
 
 set( SRC_LIST_CameraCalibrator
-        ${PROJECT_SOURCE_DIR}/src/GLWindow2.cc
+        ${PROJECT_SOURCE_DIR}/src/GLWindow2.cc      
         ${PROJECT_SOURCE_DIR}/src/CalibImage.cc
         ${PROJECT_SOURCE_DIR}/src/CalibCornerPatch.cc
         ${PROJECT_SOURCE_DIR}/src/ATANCamera.cc
@@ -57,9 +58,9 @@ endif()
 
 # check and set C++11
 include(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-if(NOT COMPILER_SUPPORTS_CXX11)
-    message(FATAL_ERROR "CXX does not support -std=c++11")
+CHECK_CXX_COMPILER_FLAG("-std=c++17" COMPILER_SUPPORTS_CXX17)
+if(NOT COMPILER_SUPPORTS_CXX17)
+    message(FATAL_ERROR "CXX does not support -std=c++17")
 endif()
 
 message(STATUS "My C++ compiler supports these C++ features:")
@@ -69,11 +70,11 @@ endforeach()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
-    set(MY_OVERALL_CXX_FLAGS "$ENV{CXXFLAGS} -D_LINUX -D_REENTRANT -std=c++11 -march=nocona -msse3 -Wno-deprecated-declarations -lpthread -lm")
+    set(MY_OVERALL_CXX_FLAGS "$ENV{CXXFLAGS} -D_LINUX -D_REENTRANT -DCVD_HAVE_TOON -std=c++17 -march=nocona -msse3 -Wno-deprecated-declarations -lpthread -lm")
 
     if(CMAKE_BUILD_TYPE MATCHES "Release")
 
-        set(CMAKE_CXX_FLAGS_RELEASE "${MY_OVERALL_CXX_FLAGS} -O3")
+        set(CMAKE_CXX_FLAGS_RELEASE "${MY_OVERALL_CXX_FLAGS} -03")
 
         set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS_RELEASE})
 

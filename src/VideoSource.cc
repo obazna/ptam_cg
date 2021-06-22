@@ -8,27 +8,27 @@
 
 #include <cvd/Linux/dvbuffer3.h>
 #include <cvd/Linux/v4lbuffer.h>
+#include <cvd/image_io.h>
+#include <cvd/image_convert.h>
 #include <cvd/colourspace_convert.h>
 #include <cvd/colourspaces.h>
-#include <cvd/image_io.h>
 #include <cvd/exceptions.h>
 
-using namespace CVD;
 using namespace GVars3;
 
 VideoSourceDV::VideoSourceDV()
 {
     std::cout << "  VideoSourceDV: Opening video source..." << std::endl;
-    DVBuffer3<yuv411>* pvb= new DVBuffer3<yuv411>();
+    CVD::DVBuffer3<CVD::yuv422>* pvb= new CVD::DVBuffer3<CVD::yuv422>();
     mptr = pvb;
     mirSize = pvb->size();
     std::cout << "  VideoSourceDV: Got video source." << std::endl;
 }
 
-void VideoSourceDV::GetAndFillFrameBWandRGB(Image<byte> &imBW, Image<Rgb<byte> > &imRGB)
+void VideoSourceDV::GetAndFillFrameBWandRGB(CVD::Image<CVD::byte> &imBW, CVD::Image<CVD::Rgb<CVD::byte> > &imRGB)
 {
-    DVBuffer3<yuv411>* pvb = (DVBuffer3<yuv411>*) mptr;
-    VideoFrame<yuv411> *pVidFrame = pvb->get_frame();
+    CVD::DVBuffer3<CVD::yuv422>* pvb = (CVD::DVBuffer3<CVD::yuv422>*) mptr;
+    CVD::VideoFrame<CVD::yuv422> *pVidFrame = pvb->get_frame();
     convert_image(*pVidFrame, imBW);
     convert_image(*pVidFrame, imRGB);
     pvb->put_frame(pVidFrame);
@@ -40,16 +40,16 @@ VideoSourceV4L::VideoSourceV4L()
     std::cout << "  VideoSourceV4L: Opening video source..." << std::endl;
     std::string QuickCamFile = GV3::get<std::string>("VideoSource.V4LDevice", "/dev/video0");
     int nFrameRate = GV3::get<int>("VideoSource.Framerate", 30);
-    V4LBuffer<yuv422>* pvb = new V4LBuffer<yuv422>(QuickCamFile, mirSize, -1, false, nFrameRate);
+    CVD::V4LBuffer<CVD::yuv422>* pvb = new CVD::V4LBuffer<CVD::yuv422>(QuickCamFile, mirSize, -1, false, nFrameRate);
     mirSize = pvb->size();
     mptr = pvb;
     std::cout << "  VideoSourceV4L: Got video source." << std::endl;
 }
 
-void VideoSourceV4L::GetAndFillFrameBWandRGB(Image<byte> &imBW, Image<Rgb<byte> > &imRGB)
+void VideoSourceV4L::GetAndFillFrameBWandRGB(CVD::Image<CVD::byte> &imBW, CVD::Image<CVD::Rgb<CVD::byte> > &imRGB)
 {
-    V4LBuffer<yuv422>* pvb = (V4LBuffer<yuv422>*) mptr;
-    VideoFrame<yuv422> *pVidFrame = pvb->get_frame();
+    CVD::V4LBuffer<CVD::yuv422>* pvb = (CVD::V4LBuffer<CVD::yuv422>*) mptr;
+    CVD::VideoFrame<CVD::yuv422> *pVidFrame = pvb->get_frame();
     convert_image(*pVidFrame, imBW);
     convert_image(*pVidFrame, imRGB);
     pvb->put_frame(pVidFrame);
@@ -74,7 +74,7 @@ VideoSourceDataSet::VideoSourceDataSet():mDatasetPath(""),mIndexImg(0)
     std::cout << "VideoSource_Linux: Got RGB Image DataSet." << std::endl;
 }
 
-void VideoSourceDataSet::GetAndFillFrameBWandRGB(Image<byte> &imBW, Image<Rgb<byte> > &imRGB)
+void VideoSourceDataSet::GetAndFillFrameBWandRGB(CVD::Image<CVD::byte> &imBW, CVD::Image<CVD::Rgb<CVD::byte> > &imRGB)
 {
     if (!mFileIn.is_open())
     {
@@ -123,7 +123,7 @@ FILE_END:
     try
     {
         std::string rgb_path = mDatasetPath+"/"+rgb_file;
-        Image<Rgb<byte> > rgb_img = img_load( rgb_path );
+        CVD::Image<CVD::Rgb<CVD::byte> > rgb_img = CVD::img_load( rgb_path );
 
         convert_image(rgb_img, imBW);
         convert_image(rgb_img, imRGB);
@@ -131,16 +131,16 @@ FILE_END:
 //        img_save(imBW,"imBW.bmp");
 //        img_save(imRGB,"imRGB.bmp");
     }
+    catch(CVD::Exceptions::Image::All &e)
+    {
+        std::cout<<"GetAndFillFrameBWandRGB: CVD::Exceptions::Image::All-->\n"<< e.what() << std::endl;
+        GUI.ParseLine("quit");
+    }
     catch(std::exception &e)
     {
         std::cout<<"GetAndFillFrameBWandRGB: std::exception-->\n"<< e.what() << std::endl;
         GUI.ParseLine("quit");
-    }
-    catch(CVD::Exceptions::Image::All &e)
-    {
-        std::cout<<"GetAndFillFrameBWandRGB: CVD::Exceptions::Image::All-->\n"<< e.what << std::endl;
-        GUI.ParseLine("quit");
-    }
+    }   
     catch(...)
     {
         std::cout<<"===================================\n"<<std::endl;

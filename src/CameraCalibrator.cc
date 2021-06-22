@@ -31,12 +31,12 @@ int main()
         CameraCalibrator c;
         c.Run();
     }
-    catch(CVD::Exceptions::All e)
+    catch(const CVD::Exceptions::All& e)
     {
         cout << endl;
         cout << "!! Failed to run CameraCalibrator; got exception. " << endl;
         cout << "   Exception was: " << endl;
-        cout << e.what << endl;
+        cout << e.what() << endl;
     }
 }
 
@@ -78,8 +78,8 @@ void CameraCalibrator::Run()
         // One black and white (for processing by the tracker etc)
         // and one RGB, for drawing.
 
-        Image<Rgb<byte> > imFrameRGB(mpVideoSource->Size());
-        Image<byte>  imFrameBW(mpVideoSource->Size());
+        Image<Rgb<CVD::byte> > imFrameRGB(mpVideoSource->Size());
+        Image<CVD::byte>  imFrameBW(mpVideoSource->Size());
 
         // Grab new video frame...
         mpVideoSource->GetAndFillFrameBWandRGB(imFrameBW, imFrameRGB);

@@ -8,7 +8,7 @@
 using namespace CVD;
 using namespace std;
 
-CVD::Image<CVD::byte> ImageProcess::GetImageROI(BasicImage<byte> &im, ImageRef irPos, CVD::ImageRef irSize)
+CVD::Image<CVD::byte> ImageProcess::GetImageROI(BasicImage<CVD::byte> &im, ImageRef irPos, CVD::ImageRef irSize)
 {
     CVD::Image<CVD::byte> imSample;
     assert(im.in_image_with_border(irPos, irSize.x/2) || im.in_image_with_border(irPos, irSize.y/2));
@@ -17,7 +17,7 @@ CVD::Image<CVD::byte> ImageProcess::GetImageROI(BasicImage<byte> &im, ImageRef i
     return imSample;
 }
 
-double ImageProcess::ShiTomasiScoreAtPoint(BasicImage<byte> &image, int nHalfBoxSize, ImageRef irCenter)
+double ImageProcess::ShiTomasiScoreAtPoint(BasicImage<CVD::byte> &image, int nHalfBoxSize, ImageRef irCenter)
 {
     double dXX = 0;
     double dYY = 0;
@@ -62,8 +62,8 @@ inline int ImageProcess::SSDAtPoint(CVD::BasicImage<CVD::byte> &im, const CVD::I
     ImageRef irImgBase = ir - imTemplate.size()/2;
     int nRows = imTemplate.size().y;
     int nCols = imTemplate.size().x;
-    byte *pImg;
-    byte *pTem;
+    CVD::byte *pImg;
+    CVD::byte *pTem;
     int nDiff;
     int nSumSqDiff = 0;
     for(int nRow = 0; nRow < nRows; nRow++)
@@ -144,8 +144,8 @@ int ImageProcess::ZMSSDAtPoint(CVD::BasicImage<CVD::byte> &im, const CVD::ImageR
     int nCols = imTemplate.size().x;
     for(int nRow = 0; nRow < nRows; nRow++)
     {
-        byte *imagepointer    = &im[irImgBase + ImageRef(0,nRow)];
-        byte *templatepointer = &imTemplate[ImageRef(0,nRow)];
+        CVD::byte *imagepointer    = &im[irImgBase + ImageRef(0,nRow)];
+        CVD::byte *templatepointer = &imTemplate[ImageRef(0,nRow)];
         for(int nCol = 0; nCol < nCols; nCol++)
         {
             int n = imagepointer[nCol];
@@ -193,7 +193,7 @@ void ImageProcess::MakeJacs(CVD::Image<float> imTemplate, CVD::Image<Vector<2> >
 
 
 // Define the patch from an input image
-void MiniPatch::SampleFromImage(ImageRef irPos, BasicImage<byte> &im)
+void MiniPatch::SampleFromImage(ImageRef irPos, BasicImage<CVD::byte> &im)
 {
     mimOrigPatch = GetImageROI(im, irPos, mirPatchSize);
 }

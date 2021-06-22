@@ -17,6 +17,7 @@
 
 #ifndef __KEYFRAME_H
 #define __KEYFRAME_H
+#include <cvd/image_convert.h>
 #include <TooN/TooN.h>
 #include <TooN/se3.h>
 #include <cvd/image.h>
@@ -25,8 +26,6 @@
 #include <vector>
 #include <set>
 #include <map>
-
-using namespace TooN;
 
 class MapPoint;
 class SmallBlurryImage;
@@ -37,7 +36,7 @@ class SmallBlurryImage;
 struct Candidate
 {
     CVD::ImageRef irLevelPos;
-    Vector<2> v2RootPos;
+    TooN::Vector<2> v2RootPos;
     double dSTScore;
 };
 
@@ -46,7 +45,7 @@ struct Measurement
 {
     int nLevel;   // Which image level?
     bool bSubPix; // Has this measurement been refined to sub-pixel level?
-    Vector<2> v2RootPos;  // Position of the measurement, REFERED TO PYRAMID LEVEL ZERO
+    TooN::Vector<2> v2RootPos;  // Position of the measurement, REFERED TO PYRAMID LEVEL ZERO
     enum {SRC_TRACKER, SRC_REFIND, SRC_ROOT, SRC_TRAIL, SRC_EPIPOLAR} Source; // Where has this measurement come frome?
 };
 
@@ -66,7 +65,7 @@ struct Level
     Level& operator=(const Level &rhs) {
         // Operator= should physically copy pixels, not use CVD's reference-counting image copy.
         im.resize(rhs.im.size());
-        copy(rhs.im, im);
+        CVD::copy(rhs.im, im);
 
         vCorners = rhs.vCorners;
         vMaxCorners = rhs.vMaxCorners;
@@ -77,9 +76,9 @@ struct Level
     std::vector<Candidate> vCandidates;   // Potential locations of new map points
 
     bool bImplaneCornersCached;           // Also keep image-plane (z=1) positions of FAST corners to speed up epipolar search
-    std::vector<Vector<2> > vImplaneCorners; // Corner points un-projected into z=1-plane coordinates
+    std::vector<TooN::Vector<2> > vImplaneCorners; // Corner points un-projected into z=1-plane coordinates
 
-    static Vector<3> mvLevelColors[];
+    static TooN::Vector<3> mvLevelColors[];
 
     // What is the scale of a level?
     inline static int LevelScale(int nLevel) {
@@ -93,16 +92,16 @@ struct Level
     }
 
     // 2-D transforms to level zero:
-    inline static Vector<2> LevelZeroPos(Vector<2> v2LevelPos, int nLevel)
+    inline static TooN::Vector<2> LevelZeroPos(TooN::Vector<2> v2LevelPos, int nLevel)
     {
-        Vector<2> v2Ans;
+        TooN::Vector<2> v2Ans;
         v2Ans[0] = LevelZeroPos(v2LevelPos[0], nLevel);
         v2Ans[1] = LevelZeroPos(v2LevelPos[1], nLevel);
         return v2Ans;
     }
-    inline static Vector<2> LevelZeroPos(CVD::ImageRef irLevelPos, int nLevel)
+    inline static TooN::Vector<2> LevelZeroPos(CVD::ImageRef irLevelPos, int nLevel)
     {
-        Vector<2> v2Ans;
+        TooN::Vector<2> v2Ans;
         v2Ans[0] = LevelZeroPos(irLevelPos.x, nLevel);
         v2Ans[1] = LevelZeroPos(irLevelPos.y, nLevel);
         return v2Ans;
@@ -115,9 +114,9 @@ struct Level
     }
 
     // 2-D transform from level zero to level N:
-    inline static Vector<2> LevelNPos(Vector<2> v2RootPos, int nLevel)
+    inline static TooN::Vector<2> LevelNPos(TooN::Vector<2> v2RootPos, int nLevel)
     {
-        Vector<2> v2Ans;
+        TooN::Vector<2> v2Ans;
         v2Ans[0] = LevelNPos(v2RootPos[0], nLevel);
         v2Ans[1] = LevelNPos(v2RootPos[1], nLevel);
         return v2Ans;
@@ -133,7 +132,7 @@ struct KeyFrame
     {
         pSBI = NULL;
     }
-    SE3<> se3CfromW;    // The coordinate frame of this key-frame as a Camera-From-World transformation
+    TooN::SE3<> se3CfromW;    // The coordinate frame of this key-frame as a Camera-From-World transformation
     bool bFixed;      // Is the coordinate frame of this keyframe fixed? (only true for first KF!)
     Level aLevels[LEVELS];  // Images, corners, etc lives in this array of pyramid levels
     std::map<MapPoint*, Measurement> mMeasurements;           // All the measurements associated with the keyframe

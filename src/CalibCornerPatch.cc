@@ -5,6 +5,7 @@
 
 #include <TooN/helpers.h>
 #include <TooN/Cholesky.h>
+#include <cvd/image_convert.h>
 #include <cvd/vector_image_ref.h>
 #include <cvd/vision.h>
 #include <cvd/utility.h>
@@ -90,7 +91,7 @@ void CalibCornerPatch::MakeTemplateWithCurrentParams()
     while(ir.next(mimGradients.size()));
 }
 
-bool CalibCornerPatch::IterateOnImageWithDrawing(CalibCornerPatch::Params &params, Image<byte> &im)
+bool CalibCornerPatch::IterateOnImageWithDrawing(CalibCornerPatch::Params &params, Image<CVD::byte> &im)
 {
     bool bReturn = IterateOnImage(params, im);
     if(!bReturn) {
@@ -103,7 +104,7 @@ bool CalibCornerPatch::IterateOnImageWithDrawing(CalibCornerPatch::Params &param
     return bReturn;
 }
 
-bool CalibCornerPatch::IterateOnImage(CalibCornerPatch::Params &params, Image<byte> &im)
+bool CalibCornerPatch::IterateOnImage(CalibCornerPatch::Params &params, Image<CVD::byte> &im)
 {
     mParams = params;
     double dLastUpdate = 0.0;
@@ -129,7 +130,7 @@ bool CalibCornerPatch::IterateOnImage(CalibCornerPatch::Params &params, Image<by
     return true;
 }
 
-double CalibCornerPatch::Iterate(Image<byte> &im)
+double CalibCornerPatch::Iterate(Image<CVD::byte> &im)
 { 
     Vector<2> v2TL = mParams.v2Pos - vec(mimTemplate.size() - ImageRef(1,1)) / 2.0;
     if(!(v2TL[0] >= 0.0 && v2TL[1] >= 0.0))
@@ -138,7 +139,7 @@ double CalibCornerPatch::Iterate(Image<byte> &im)
     if(!(v2BR[0] < (im.size().x - 1.0) && v2BR[1] < (im.size().y - 1.0)))
         return -1.0;
 
-    image_interpolate<Interpolate::Bilinear, byte> imInterp(im);
+    image_interpolate<Interpolate::Bilinear, CVD::byte> imInterp(im);
     Matrix<6> m6JTJ = Zeros;
     Vector<6> v6JTD = Zeros;
 

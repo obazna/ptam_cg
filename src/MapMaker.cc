@@ -29,7 +29,8 @@ MapMaker::MapMaker(Map& m, const ATANCamera &cam)
 {
     mbResetRequested = false;
     Reset();
-    start(); // This CVD::thread func starts the map-maker thread with function run()
+    //start(); // This CVD::thread func starts the map-maker thread with function run()
+
     GUI.RegisterCommand("SaveMap", GUICommandCallBack, this);
     GV3::Register(mgvdWiggleScale, "MapMaker.WiggleScale", 0.1, SILENT); // Default to 10cm between keyframes
 }

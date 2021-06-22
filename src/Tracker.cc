@@ -83,7 +83,7 @@ void Tracker::Reset()
  * @param imFrame gray image or frame
  * @param bDraw bDraw tells the tracker wether it should output any GL graphics or not
  */
-void Tracker::TrackFrame(Image<byte> &imFrame, bool bDraw)
+void Tracker::TrackFrame(Image<CVD::byte> &imFrame, bool bDraw)
 {
     mbDraw = bDraw;
     mMessageForUser.str("");

@@ -18,11 +18,11 @@ sudo apt-get install liblapack-dev libblas-dev libsuitesparse-dev
 sudo apt-get install libjpeg-dev libpng-dev libtiff5-dev libdc1394-22-dev libv4l-dev
 # Video I/O && Codec && Display
 sudo apt-get install libavcodec-dev libavformat-dev libavutil-dev libpostproc-dev libswscale-dev libavdevice-dev libsdl-dev
-sudo apt-get install libgtk2.0-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev
+sudo apt-get install libgtk2.0-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
 # OpenGL
 sudo apt-get install mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev
 # qt4 & qt5
-sudo apt-get install libqt4-dev qt5-default
+sudo apt-get install qt5-default
 
 echo -e "\n Making 3rdParty directory in the current project directory..."
 PTAM3rdParty=3rdParty
@@ -35,19 +35,22 @@ ulimit -s unlimited
 # TooN
 echo -e "\n Installing TooN... \n"
 cd ${Path3rdParty}
-# sudo git clone git://github.com/edrosten/TooN.git
-wget https://www.edwardrosten.com/cvd/TooN-2.2.tar.xz
-tar xvJf TooN-2.2.tar.xz
-cd TooN-2.2
+sudo git clone git://github.com/edrosten/TooN.git
+#wget https://www.edwardrosten.com/cvd/TooN-2.2.tar.xz
+#tar xvJf TooN-2.2.tar.xz
+cd TooN 
+#cd TooN-2.2
 ./configure && make && sudo make install
 
 # libCVD
 echo -e "\n Installing libCVD... \n"
 cd ${Path3rdParty}
 # sudo git clone git://github.com/edrosten/libcvd.git
-wget https://www.edwardrosten.com/cvd/libcvd-20150407.tar.xz
-tar xvJf libcvd-20150407.tar.xz
-cd libcvd-20150407
+#wget https://www.edwardrosten.com/cvd/libcvd-20150407.tar.xz
+#tar xvJf libcvd-20150407.tar.xz
+#cd libcvd-20150407
+git clone https://github.com/edrosten/libcvd.git
+cd libcvd
 ./configure && make && sudo make install
 
 # GVars3

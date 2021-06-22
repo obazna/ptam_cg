@@ -17,7 +17,7 @@
 #include <queue>
 #include <cvd/image.h>
 #include <cvd/byte.h>
-#include <cvd/thread.h>
+#include "cvd_thread.h"
 
 #include "Map.h"
 #include "KeyFrame.h"
